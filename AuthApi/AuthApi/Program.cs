@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using AuthApi.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,10 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 // Inyección
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthRepository>();
+
+// Categoria
+builder.Services.AddScoped<ICategoriaEfRepository, CategoriaEfRepository>();
+builder.Services.AddScoped<ICategoriaEfService, CategoriaEfService>();
 
 // JWT
 builder.Services.AddAuthentication("Bearer")
@@ -65,8 +70,11 @@ builder.Services.AddSwaggerGen(c =>
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
             },
-            Array.Empty<string>()
+            new string[] {}
         }
     });
 });
@@ -82,6 +90,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication(); //
 app.UseAuthorization();
 
 app.MapControllers();

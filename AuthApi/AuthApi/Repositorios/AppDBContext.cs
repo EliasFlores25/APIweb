@@ -14,6 +14,8 @@ namespace AuthApi.Repositorios
 
         public DbSet<Rol> Roles { get; set; }
 
+        public DbSet<Categoriaef> Categoria { get; set; } // Para manejar la Categoria
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -28,6 +30,9 @@ namespace AuthApi.Repositorios
                 .HasOne(u => u.Rol)
                 .WithMany(r => r.Usuarios)
                 .HasForeignKey(u => u.RolId);
+
+             //Mapear Categoriaef a la tabla en la basdeDD
+            modelBuilder.Entity<Categoriaef>().ToTable("Categoriaef");
         }
     }
 }
